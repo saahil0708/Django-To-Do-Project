@@ -1,23 +1,24 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 
 from . import models
 
+@never_cache
+@login_required(login_url='Login')
 def Home(request):
     if request.method == 'POST':
         title = request.POST.get('title')
-        print(f'Title: {title}')
+        if title:
+            models.ToDoItem.objects.create(title = title, user = request.user)
 
-        obj = models.ToDoItem(title = title, user = request.user)
-        obj.save()
+        return redirect('/')
 
-        res = models.ToDoItem.objects.filter(user = request.user).order_by('-date')
-        return redirect('/', {
-            'res': res
-        })
     res = models.ToDoItem.objects.filter(user = request.user).order_by('-date')
-    return render(request, 'todo.html')
+
+    return render(request, 'todo.html', {'res': res})
 
 def SignUp(request):
     if request.method == 'POST':
@@ -53,3 +54,26 @@ def Login(request):
             pass
 
     return render(request, 'login.html')
+
+def Logout(request):
+    logout(request)
+    return redirect('Login')
+
+@login_required(login_url='Login')
+def Edit(request, srno):
+    todo = models.ToDoItem.objects.get(srno=srno, user=request.user)
+    
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        if title:
+            todo.title = title
+            todo.save()
+            return redirect('/')
+            
+    return render(request, 'edit.html', {'todo': todo})
+
+@login_required(login_url='Login')
+def Delete(request, srno):
+    todo = models.ToDoItem.objects.get(srno=srno, user=request.user)
+    todo.delete()
+    return redirect('/')

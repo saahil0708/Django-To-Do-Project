@@ -22,5 +22,6 @@ from ToDo import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.Home, name='Home'),
+    path('edit/<int:srno>/', views.Edit, name='Edit'),
     path('auth/', include('ToDo.urls')),
 ]
