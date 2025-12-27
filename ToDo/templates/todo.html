@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Do List | Get Things Done</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .todo-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 40px;
+        }
+        
+        .todo-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .todo-title {
+            font-weight: 700;
+            color: #212529;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+        
+        .todo-subtitle {
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        .todo-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 2rem;
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 0;
+        }
+        
+        .task-input {
+            padding: 14px 18px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            font-size: 1rem;
+            width: 100%;
+            transition: all 0.2s;
+        }
+        
+        .task-input:focus {
+            border-color: #4dabf7;
+            box-shadow: 0 0 0 3px rgba(77, 171, 247, 0.15);
+            outline: none;
+        }
+        
+        .btn-primary {
+            background-color: #4dabf7;
+            border-color: #4dabf7;
+            padding: 14px 28px;
+            font-weight: 600;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        
+        .btn-primary:hover {
+            background-color: #339af0;
+            border-color: #339af0;
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .tasks-title {
+            font-weight: 600;
+            color: #212529;
+            font-size: 1.3rem;
+            margin: 0;
+        }
+        
+        .task-count {
+            background-color: #4dabf7;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .task-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background-color: white;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s;
+        }
+        
+        .task-item:hover {
+            border-color: #4dabf7;
+            box-shadow: 0 2px 8px rgba(77, 171, 247, 0.1);
+        }
+        
+        .task-checkbox {
+            margin-right: 15px;
+        }
+        
+        .task-text {
+            flex-grow: 1;
+            color: #212529;
+            font-size: 1rem;
+            margin: 0;
+        }
+        
+        .task-completed {
+            text-decoration: line-through;
+            color: #6c757d;
+            opacity: 0.7;
+        }
+        
+        .task-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .task-action-btn {
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .task-action-btn:hover {
+            color: #4dabf7;
+            background-color: #f8f9fa;
+        }
+        
+        .btn-delete:hover {
+            color: #e53e3e !important;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-icon {
+            font-size: 3rem;
+            color: #dee2e6;
+            margin-bottom: 20px;
+        }
+        
+        .empty-text {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .empty-subtext {
+            font-size: 0.9rem;
+            color: #adb5bd;
+        }
+        
+        .stats-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 1.5rem;
+            margin-top: 20px;
+        }
+        
+        .stats-title {
+            font-weight: 600;
+            color: #212529;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .stat-value {
+            font-weight: 700;
+            color: #4dabf7;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .todo-title {
+                font-size: 2rem;
+            }
+            
+            .todo-card {
+                padding: 1.5rem;
+            }
+            
+            .task-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .task-actions {
+                margin-top: 10px;
+                align-self: flex-end;
+            }
+            
+            .form-group {
+                flex-direction: column;
+            }
+            
+            .btn-primary {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <div class="todo-header">
+            <h1 class="todo-title">Get Things Done!</h1>
+            <p class="todo-subtitle">Organize your day, boost your productivity</p>
+        </div>
+        
+        <!-- Add Task Form -->
+        <div class="todo-card">
+            <form method="post" class="row g-3 align-items-center">
+                {% csrf_token %}
+                <div class="col-md-9">
+                    <input type="text" 
+                           name="title" 
+                           required 
+                           placeholder="What needs to be done today?" 
+                           class="form-control task-input"
+                           aria-label="Add new task">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary w-100" value="Add Task">
+                        <i class="fas fa-plus me-2"></i>Add Task
+                    </button>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Tasks List -->
+        <div class="todo-card">
+            <div class="tasks-header">
+                <h2 class="tasks-title">Today's Tasks</h2>
+                <span class="task-count">3 tasks</span>
+            </div>
+            
+            {% if res %}
+                {% for todo in res %}
+                    <ul class="task-list">
+                        <!-- Example Task Items -->
+                        <li class="task-item">
+                            <input type="checkbox" class="form-check-input task-checkbox">
+                            <p class="task-text">{{ todo.title }}</p>
+                            <div class="task-actions">
+                                <button class="task-action-btn" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="task-action-btn btn-delete" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </li>
+                        
+                        <li class="task-item">
+                            <input type="checkbox" class="form-check-input task-checkbox" checked>
+                            <p class="task-text task-completed">Buy groceries</p>
+                            <div class="task-actions">
+                                <button class="task-action-btn" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="task-action-btn btn-delete" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </li>
+                        
+                        <li class="task-item">
+                            <input type="checkbox" class="form-check-input task-checkbox">
+                            <p class="task-text">Schedule team meeting</p>
+                            <div class="task-actions">
+                                <button class="task-action-btn" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="task-action-btn btn-delete" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </li>
+                    </ul>
+                {% endfor %}
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-clipboard-list"></i>
+                </div>
+                <p class="empty-text">No tasks yet</p>
+                <p class="empty-subtext">Add your first task above to get started!</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous"></script>
+    
+    <script>
+        // Task interaction functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle task completion
+            const checkboxes = document.querySelectorAll('.task-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const taskText = this.closest('.task-item').querySelector('.task-text');
+                    if (this.checked) {
+                        taskText.classList.add('task-completed');
+                    } else {
+                        taskText.classList.remove('task-completed');
+                    }
+                    updateStats();
+                });
+            });
+            
+            // Delete task functionality
+            const deleteButtons = document.querySelectorAll('.btn-delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const taskItem = this.closest('.task-item');
+                    if (confirm('Are you sure you want to delete this task?')) {
+                        taskItem.style.opacity = '0';
+                        taskItem.style.transform = 'translateX(-20px)';
+                        setTimeout(() => {
+                            taskItem.remove();
+                            updateStats();
+                        }, 300);
+                    }
+                });
+            });
+            
+            // Update stats function
+            function updateStats() {
+                const totalTasks = document.querySelectorAll('.task-item').length;
+                const completedTasks = document.querySelectorAll('.task-checkbox:checked').length;
+                const pendingTasks = totalTasks - completedTasks;
+                const progress = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+                
+                // Update task count
+                document.querySelector('.task-count').textContent = `${totalTasks} task${totalTasks !== 1 ? 's' : ''}`;
+                
+                // Update stats if stats elements exist
+                const statValues = document.querySelectorAll('.stat-value');
+                if (statValues.length >= 4) {
+                    statValues[0].textContent = totalTasks;
+                    statValues[1].textContent = completedTasks;
+                    statValues[2].textContent = pendingTasks;
+                    statValues[3].textContent = `${progress}%`;
+                }
+            }
+            
+            // Initialize stats
+            updateStats();
+            
+            // Form submission enhancement
+            const form = document.querySelector('form');
+            const input = form.querySelector('input[name="title"]');
+            
+            form.addEventListener('submit', function() {
+                // Clear input after submission (in real app, this would happen on page reload)
+                setTimeout(() => {
+                    input.value = '';
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>
