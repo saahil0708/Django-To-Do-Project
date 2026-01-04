@@ -487,7 +487,8 @@
                     const taskId = button.getAttribute('data-bs-task-id');
                     // Update the modal's link
                     const deleteBtn = deleteModal.querySelector('#confirmDeleteBtn');
-                    deleteBtn.href = `delete/${taskId}`;
+                    // use absolute path to avoid relative-url issues
+                    deleteBtn.href = `/delete/${taskId}`;
                 });
             }
 

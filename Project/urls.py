@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.Home, name='Home'),
     path('edit/<int:srno>/', views.Edit, name='Edit'),
+    path('delete/<int:srno>/', views.Delete, name='Delete'),
     path('auth/', include('ToDo.urls')),
 ]
